@@ -13,8 +13,8 @@ const ShapePreview = () => {
   const edgeTextRefs = useRef([]);
   const [points, setPoints] = useState([
     { x: 150, y: 100 },
-    { x: 350, y: 100 },
-    { x: 350, y: 250 },
+    { x: 450, y: 100 },
+    { x: 450, y: 250 },
     { x: 150, y: 250 },
   ]);
   const [edgeLengths, setEdgeLengths] = useState([]);
