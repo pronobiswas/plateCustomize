@@ -6,6 +6,7 @@ import ShapePreview from '../_component/getstarted/shapePreview'
 import ShapeTwo from '../_component/getstarted/shapeTwo'
 import ShapePreview3 from '../_component/getstarted/ShapePreview3'
 import ShapePreview5 from '../_component/getstarted/shapePreview5'
+import ShapePreview6 from '../_component/getstarted/shapePreview6'
 
 export default function page() {
   const [previewShape , setPreviewShape] = useState();
@@ -27,6 +28,11 @@ export default function page() {
     },
     {
       id:4,
+      name:"shape4",
+      image:"url/image"
+    },
+    {
+      id:5,
       name:"shape4",
       image:"url/image"
     },
@@ -72,11 +78,15 @@ export default function page() {
             {
               previewShape===4 && <ShapePreview5/>
             }
+            {
+              previewShape===5 && <ShapePreview6/>
+            }
 
             {/* <ShapePreview/> */}
             {/* <ShapeTwo/> */}
             {/* <ShapePreview3/> */}
             {/* <ShapePreview5/> */}
+            {/* <ShapePreview6/> */}
         </serction>
         </div>
       </main>
