@@ -9,7 +9,7 @@ export default function Banner() {
             <div>
                 <h1 className='text-5xl'>Design Your Own Floor Plates</h1>
                 <p className='max-w-[640px] pt-8 pb-[51px]'>Customize, preview, and order — all in one place. Create the perfect floor plate for your project with instant pricing and  CAD preview</p>
-                <Link href={"#"}>
+                <Link href='/getstarted'>
                 <div className='w-fit px-20 py-4 bg-black text-white'>
                     <span>Get started</span>
                 </div>

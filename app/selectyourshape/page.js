@@ -7,6 +7,7 @@ import ShapeTwo from '../_component/getstarted/shapeTwo'
 import ShapePreview3 from '../_component/getstarted/ShapePreview3'
 import ShapePreview5 from '../_component/getstarted/shapePreview5'
 import ShapePreview6 from '../_component/getstarted/shapePreview6'
+import ShapePreview2 from '../_component/getstarted/shapePreview2'
 
 export default function page() {
   const [previewShape , setPreviewShape] = useState();
@@ -33,7 +34,12 @@ export default function page() {
     },
     {
       id:5,
-      name:"shape4",
+      name:"shape5",
+      image:"url/image"
+    },
+    {
+      id:6,
+      name:"shape6",
       image:"url/image"
     },
   ]
@@ -42,20 +48,20 @@ export default function page() {
     setPreviewShape(a.id)
   }
   return (
-    <div>
+    <>
       <main>
-        <div className='w-full h-full min-h-[70vh] flex'>
+        <div className='w-full h-[calc(100vh-100px)] flex'>
 
-        <section className='w-full md:w-2/6 border-r-2'>
+        <section className='w-full md:w-2/6 xl:w-1/5 h-full overflow-y-scroll border-r-2 py-8 px-5'>
             select your shape
             {/* <ShapeCatergory /> */}
-            <ul>
+            <ul className=' flex flex-col gap-5'>
               {
                 plateShapes.map((shape, i)=>(
                   <div key={i} onClick={()=>handleShapePreview(shape)}>
-                    <div className='w-24 h-fit'>
-                      <div className='w-full h-20 bg-red-400'></div>
-                      <div className='w-full h-10'>
+                    <div className='aspect-[300/300] border'>
+                      <div className='aspect-[300/300] bg-red-400'></div>
+                      <div className='w-full h-fit'>
                         {shape.name}
                       </div>
                     </div>
@@ -64,7 +70,7 @@ export default function page() {
               }
             </ul>
         </section>
-        <serction className='w-full md:w-4/6'>
+        <section className='w-full h-full overflow-y-scroll md:w-4/6 xl:w-5/5'>
             preview your shape
             {
               previewShape===1 && <ShapePreview/>
@@ -81,17 +87,21 @@ export default function page() {
             {
               previewShape===5 && <ShapePreview6/>
             }
+            {
+              previewShape===6 && <ShapePreview2/>
+            }
 
             {/* <ShapePreview/> */}
             {/* <ShapeTwo/> */}
             {/* <ShapePreview3/> */}
             {/* <ShapePreview5/> */}
             {/* <ShapePreview6/> */}
-        </serction>
+            
+        </section>
         </div>
       </main>
 
 
-    </div>
+    </>
   )
 }
