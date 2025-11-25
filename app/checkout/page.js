@@ -1,20 +1,21 @@
+import Link from 'next/link'
 import React from 'react'
 
 export default function page() {
     return (
         <>
             {/* &&&&&&&&&&&checkout main&&&&&&&&&& */}
-            <main>
+            <main className='w-full'>
                 {/* ########checkout wrapper######## */}
-                <div>
+                <div className='w-full h-full'>
                     {/* ====checkout nevigator===== */}
                     <div className='w-full p-5'>
                         <span className='font-bold text-2xl'>&lt;</span> <span className='font-bold text-2xl'> CHECK OUT</span>
                     </div>
                     {/* ====checkout area====== */}
-                    <div className='w-full p-5 flex gap-8 '>
+                    <div className='w-full h-full min-h-screen p-5 flex gap-8 '>
                         {/* ===transcetion details==== */}
-                        <div className='w-1/2 border border-gray-300 p-5'>
+                        <div className='w-1/2 h-full border border-gray-300 p-5'>
                             {/* $$$$$$$$$$$$ transection form $$$$$$$$$$$$$$$$ */}
                             <form className='flex flex-col gap-4'>
                                 {/* --row _ name -- */}
@@ -94,14 +95,14 @@ export default function page() {
                             </form>
                         </div>
                         {/* ====order details==== */}
-                        <div className='w-1/2 h-full min-h-screen border p-5'>
+                        <div className='w-1/2 h-auto flex flex-col  border p-5'>
                             {/* ---product preview--- */}
                             <div className='flex justify-center pb-8'>
                                 <div className='w-20 h-20 bg-black'></div>
                             </div>
                             {/* ---order summary--- */}
-                            <div className='w-full max-w-3xl flex flex-col items-center justify-between'>
-                                <div className='w-full border'>
+                            <div className='w-full max-w-3xl h-full flex flex-col items-center justify-between'>
+                                <div className='w-full'>
                                     <h3 className='font-bold text-2xl mb-4'>oorder summary</h3>
                                     <hr />
                                     <div className='w-full h-fit flex flex-col gap-5 py-5 border-y-2'>
@@ -123,7 +124,7 @@ export default function page() {
                                     </div>
                                     <hr />
                                     <p className='mt-6'>Product will be delivered with in 3 to 4 for business days</p>
-                                    
+
                                     <div className='w-full flex items-center justify-center gap-4'>
                                         <span><svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <g clipPath="url(#clip0_85_1429)">
@@ -141,13 +142,14 @@ export default function page() {
                                         <span>Cancellation Policy</span>
                                     </div>
                                 </div>
-                                <div className='w-full flex justify-end border'>
-                                    <button 
-                                    className='px-12 py-2 bg-blue-900'
-                                    >Proceed</button>
+                                <div className='w-full flex justify-end'>
+                                    <Link href="/purchasepage">
+                                        <button
+                                            className='px-12 py-2 bg-blue-900'
+                                        >Proceed</button>
+                                    </Link>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
