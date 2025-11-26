@@ -20,7 +20,9 @@ export default function Header() {
           </ul>
         </div>
         <div className='members flex items-center gap-5'>
+          <Link href="/auth/signin">
           <span>Login</span>
+          </Link>
           <span>|</span>
           <span>Sign up</span>
           <span><IoMdCart /></span>
