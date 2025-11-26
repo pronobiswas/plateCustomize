@@ -118,7 +118,6 @@ const ShapePreview2 = () => {
 
         setEdgeLengths(lengths);
     };
-
     // Init draggables for edges + initial point positions
     useEffect(() => {
         if (!stageRef.current) return;
@@ -183,47 +182,96 @@ const ShapePreview2 = () => {
     // --------------------
     // PANNING (background drag)
     // --------------------
+    // useEffect(() => {
+    //     const stage = stageRef.current;
+    //     if (!stage) return;
+
+    //     const onPointerDown = (e) => {
+    //         if (e.target !== stage && e.target !== stageInnerRef.current) return;
+
+    //         isPanning.current = true;
+    //         lastPointer.current = { x: e.clientX, y: e.clientY };
+
+    //         e.preventDefault();
+    //     };
+
+    //     const onPointerMove = (e) => {
+    //         if (!isPanning.current) return;
+    //         const dx = e.clientX - lastPointer.current.x;
+    //         const dy = e.clientY - lastPointer.current.y;
+    //         lastPointer.current = { x: e.clientX, y: e.clientY };
+
+    //         pan.current.x += dx;
+    //         pan.current.y += dy;
+    //         applyTransform();
+    //         drawShape();
+    //     };
+
+    //     const onPointerUp = () => {
+    //         isPanning.current = false;
+    //     };
+
+    //     stage.addEventListener("pointerdown", onPointerDown);
+    //     window.addEventListener("pointermove", onPointerMove);
+    //     window.addEventListener("pointerup", onPointerUp);
+    //     window.addEventListener("pointercancel", onPointerUp);
+
+    //     return () => {
+    //         stage.removeEventListener("pointerdown", onPointerDown);
+    //         window.removeEventListener("pointermove", onPointerMove);
+    //         window.removeEventListener("pointerup", onPointerUp);
+    //         window.removeEventListener("pointercancel", onPointerUp);
+    //     };
+    // }, []);
+
     useEffect(() => {
-        const stage = stageRef.current;
-        if (!stage) return;
+    const stage = stageRef.current;
+    const inner = stageInnerRef.current;
+    if (!stage || !inner) return;
 
-        const onPointerDown = (e) => {
-            if (e.target !== stage && e.target !== stageInnerRef.current) return;
+    const onPointerDown = (e) => {
+        // allow panning when clicking:
+        // <svg>, <path>, or stageInner background
+        const allowedTargets = ["svg", "path", "DIV"];
 
-            isPanning.current = true;
-            lastPointer.current = { x: e.clientX, y: e.clientY };
+        const tag = e.target.tagName.toLowerCase();
+        if (!allowedTargets.includes(tag)) return;
 
-            e.preventDefault();
-        };
+        isPanning.current = true;
+        lastPointer.current = { x: e.clientX, y: e.clientY };
 
-        const onPointerMove = (e) => {
-            if (!isPanning.current) return;
-            const dx = e.clientX - lastPointer.current.x;
-            const dy = e.clientY - lastPointer.current.y;
-            lastPointer.current = { x: e.clientX, y: e.clientY };
+        e.preventDefault();
+    };
 
-            pan.current.x += dx;
-            pan.current.y += dy;
-            applyTransform();
-            drawShape();
-        };
+    const onPointerMove = (e) => {
+        if (!isPanning.current) return;
 
-        const onPointerUp = () => {
-            isPanning.current = false;
-        };
+        const dx = e.clientX - lastPointer.current.x;
+        const dy = e.clientY - lastPointer.current.y;
 
-        stage.addEventListener("pointerdown", onPointerDown);
-        window.addEventListener("pointermove", onPointerMove);
-        window.addEventListener("pointerup", onPointerUp);
-        window.addEventListener("pointercancel", onPointerUp);
+        lastPointer.current = { x: e.clientX, y: e.clientY };
 
-        return () => {
-            stage.removeEventListener("pointerdown", onPointerDown);
-            window.removeEventListener("pointermove", onPointerMove);
-            window.removeEventListener("pointerup", onPointerUp);
-            window.removeEventListener("pointercancel", onPointerUp);
-        };
-    }, []);
+        pan.current.x += dx;
+        pan.current.y += dy;
+
+        applyTransform();
+        drawShape();
+    };
+
+    const onPointerUp = () => {
+        isPanning.current = false;
+    };
+
+    stage.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+
+    return () => {
+        stage.removeEventListener("pointerdown", onPointerDown);
+        window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("pointerup", onPointerUp);
+    };
+}, []);
 
     // --------------------
     // WHEEL ZOOM (center on mouse)
@@ -273,7 +321,7 @@ const ShapePreview2 = () => {
             ref={stageRef}
             style={{
                 width: "100%",
-                height: "100%",
+                height: "700px",
                 position: "relative",
                 overflow: "hidden",
                 padding: "10px",

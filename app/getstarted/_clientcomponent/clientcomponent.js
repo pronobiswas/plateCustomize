@@ -5,9 +5,12 @@
 import React, { useState } from 'react'
 import Image from "next/image";
 import Link from 'next/link';
+import ShapePreview6 from '../../_component/getstarted/shapePreview6';
+import ShapePreview2 from '../../_component/getstarted/shapePreview2';
 
 export default function ClientComponent() {
     const [previewImage, setPreviewImage] = useState('');
+    const [previewComponent, setPreviewComponent] = useState('');
     const allShapes = [
         {
             id: 1,
@@ -48,6 +51,7 @@ export default function ClientComponent() {
     ]
     const handleShapeClick = (item) => {
         setPreviewImage(item.img)
+        setPreviewComponent(item.id)
     }
     return (
         <>
@@ -82,16 +86,8 @@ export default function ClientComponent() {
                             {/* ===preview box=== */}
                             <div className='w-full aspect-[1/1] max-w-3xl max-h-3xl flex flex-col items-center justify-center'>
                                 <div className='w-full'>
-                                    {
-                                        previewImage &&
-                                        <Image
-                                            src={previewImage}
-                                            alt="My Image"
-                                            width={400}
-                                            height={420}
-                                            className='w-full h-full'
-                                        />
-                                    }
+                                    {previewComponent === 1 && <ShapePreview6 />}
+                                    {previewComponent === 2 && <ShapePreview2 />}
                                 </div>
                                 {
                                     previewImage &&

@@ -56,7 +56,7 @@ export default function page() {
                              <label>Remember Password</label>
                         </p>
                         <Link
-                        href="/"
+                        href="/auth/forgotpassword"
                         className=""
                         >
                             Forgot password
