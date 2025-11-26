@@ -7,7 +7,7 @@ export default function page() {
     <>
       <main>
         {/* ====signin wrappr===== */}
-        <section className='w-full h-screen flex justify-center items-center'>
+        <section className='w-full h-[calc(100vh-90px)] flex justify-center items-center'>
             <div className='w-full max-w-[480px] shadow-inner py-12 px-8'>
                 <Image 
                 src="/headerLogo.png"
