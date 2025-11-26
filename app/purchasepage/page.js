@@ -14,6 +14,7 @@ export default function page() {
                         <div className='w-1/2'>
                             <h5 className='text-xl font-bold'>Invoice</h5>
                             <p><b>Order ID :</b> 22004411</p>
+                            <br/>
                             <p><b>Date :</b> 02/ 02 / 2025</p>
                             <p><b>Customer name :</b> Nusrat</p>
                             <p><b>Address :</b> Voorstraat 32, 8317 AH Kraggenburg, Netherlands , </p>
@@ -21,13 +22,15 @@ export default function page() {
                             <p><b>Product name :</b> Square Plate</p>
                             <p><b>Dimensions :</b> 800 × 100 mm,</p>
                             <p><b>Quantity :</b> 2</p>
+                            <br/>
                             <p><b>Subtotal :</b> €88.00 EUR </p>
                             <p className='text-red-500'>Total cost  : €88.00 EUR </p>
                         </div>
                         {/* ==purchase element=== */}
-                        <div className='w-1/2 p-12 border'>
+                        <div className='w-1/2 p-12 border flex items-center justify-center'>
                             {/* ----wrapper--- */}
-                            <div className='w-4/5 aspect-square'></div>
+                            <div className='w-4/5 aspect-square border rounded-tl-full bg-black'>
+                            </div>
                         </div>
                     </div>
                     <p className='text-center py-5'>Product will be delivered with in 3 to 4 for business days</p>

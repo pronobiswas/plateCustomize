@@ -145,7 +145,7 @@ export default function page() {
                                 <div className='w-full flex justify-end'>
                                     <Link href="/purchasepage">
                                         <button
-                                            className='px-12 py-2 bg-blue-900'
+                                            className='px-12 py-2 bg-black text-white'
                                         >Proceed</button>
                                     </Link>
                                 </div>
