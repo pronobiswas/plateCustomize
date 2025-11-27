@@ -10,15 +10,15 @@ export default function HowItsWork() {
     const [swiperRef, setSwiperRef] = useState(null);
     return (
         <>
-            <section className='w-full flex justify-center'>
-                <div className='HowItsWork_wrapper w-full max-w-[1712px]   py-14 px-20 flex justify-between items-center'>
+            <section className='w-full flex flex justify-center py-12'>
+                <div className='HowItsWork_wrapper w-full max-w-[1712px]   py-14 px-20 flex flex-col gap-8 md:gap-2 md:flex-row justify-between items-center'>
                     {/* ---how_its_work_content--- */}
-                    <div className='w-full max-w-[438px] text-white'>
+                    <div className='w-full md:w-2/5 max-w-[438px] text-white'>
                         <h4 className='text-2xl mb-6'>How it works</h4>
                         <p>We create smart, easy-to-use tools that simplify floor plate design and ordering. Our goal is to make layout customization fast, accurate, and effortless for everyone</p>
                     </div>
                     {/* ---how_its_work_slider--- */}
-                    <div className='w-1/2'>
+                    <div className='w-full md:w-3/5'>
                         <Swiper
                             onSwiper={setSwiperRef}
                             loop={true}
@@ -40,7 +40,7 @@ export default function HowItsWork() {
                         >
                             {["Slide 1", "Slide 2", "Slide 3", "Slide 4", "Slide 5", "Slide 6"].map((text, i) => (
                                 <SwiperSlide key={i}>
-                                    <div className="aspect-[378/433] flex flex-col items-center justify-center gap-5 bg-white p-11">
+                                    <div className="aspect-[378/433] flex flex-col items-center justify-center gap-5 bg-white p-11 rounded-xl">
                                         {/* ---card header-- */}
                                         <div className='w-full  flex justify-center '>
                                             {/* --instruction step-- */}

@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
 
@@ -10,7 +10,7 @@ const ShapePreview3 = () => {
     const shapeRef = useRef(null);
     const pointRefs = useRef([]);
     const edgeRefs = useRef([]);
-    
+
     // Refs for the new measurement labels
     const widthTopRef = useRef(null);
     const widthBottomRef = useRef(null);
@@ -23,12 +23,14 @@ const ShapePreview3 = () => {
 
     // Initial shape points (a rectangle)
     const [points, setPoints] = useState([
-        { x: 100, y: 100 }, // Top-left point
-        { x: 400, y: 100 }, // Top-right point
-        { x: 400, y: 300 }, // Bottom-right point
-        { x: 100, y: 300 }, // Bottom-left point
+        { x: 100, y: 100 },
+        { x: 400, y: 100 },
+        { x: 400, y: 300 },
+        { x: 100, y: 300 },
     ]);
-    
+
+    const [cornerAngles, setCornerAngles] = useState([90, 90, 90, 90]);
+
     // State to hold calculated dimensions for display
     const [dimensions, setDimensions] = useState({
         shapeWidth: 0,
@@ -40,17 +42,40 @@ const ShapePreview3 = () => {
         stageWidth: 0,
         stageHeight: 0,
     });
+    // ====get the corner angle========
+    // Function to calculate angles at all corners
+    const calculateCornerAngles = (points) => {
+        const angles = points.map((point, i) => {
+            const A = points[(i - 1 + points.length) % points.length];
+            const B = point;
+            const C = points[(i + 1) % points.length];
 
-    /**
-     * @function drawShape
-     * Calculates new point positions, updates the SVG path,
-     * calculates the length of each edge, and positions the draggable edge handles and all measurement labels.
-     */
+
+            const BA = { x: A.x - B.x, y: A.y - B.y };
+            const BC = { x: C.x - B.x, y: C.y - B.y };
+
+
+            const dot = BA.x * BC.x + BA.y * BC.y;
+            const magBA = Math.sqrt(BA.x * BA.x + BA.y * BA.y);
+            const magBC = Math.sqrt(BC.x * BC.x + BC.y * BC.y);
+
+
+            const angleRad = Math.acos(dot / (magBA * magBC));
+            const angleDeg = (angleRad * 180) / Math.PI;
+
+            return angleDeg;
+        });
+
+        return angles;
+    };
+
+
+
     const drawShape = () => {
         if (!stageRef.current) return;
-        
+
         const stageRect = stageRef.current.getBoundingClientRect();
-        
+
         const newPoints = pointRefs.current.map((el) => {
             const rect = el.getBoundingClientRect();
             return {
@@ -79,6 +104,9 @@ const ShapePreview3 = () => {
             newPoints.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ") +
             " Z";
         shapeRef.current.setAttribute("d", path);
+        const newCornerAngles = calculateCornerAngles(newPoints);
+        setCornerAngles(newCornerAngles);
+        console.log("Corner angles:", newCornerAngles);
 
         // Update state for dimensions
         setDimensions({
@@ -93,78 +121,45 @@ const ShapePreview3 = () => {
         });
 
         // --- Position all measurement labels ---
-        
+
         // Shape Width Labels (Top & Bottom)
         if (widthTopRef.current) {
-            gsap.set(widthTopRef.current, { 
-                x: minX + shapeWidth / 2, 
+            gsap.set(widthTopRef.current, {
+                x: minX + shapeWidth / 2,
                 y: minY - 40,
-                xPercent: -60, 
-                yPercent: -50 
+                xPercent: -60,
+                yPercent: -20
             });
         }
         if (widthBottomRef.current) {
-            gsap.set(widthBottomRef.current, { 
-                x: minX + shapeWidth / 2, 
-                y: maxY + 20, 
-                xPercent: -60, 
-                yPercent: -50 
+            gsap.set(widthBottomRef.current, {
+                x: minX + shapeWidth / 2,
+                y: maxY + 20,
+                xPercent: -60,
+                yPercent: -50
             });
         }
 
         // Shape Height Labels (Left & Right)
         if (heightLeftRef.current) {
-            gsap.set(heightLeftRef.current, { 
-                x: minX - 40, 
-                y: minY + shapeHeight / 2, 
-                xPercent: -40, 
+            gsap.set(heightLeftRef.current, {
+                x: minX - 40,
+                y: minY + shapeHeight / 2,
+                xPercent: -40,
                 yPercent: -85,
                 rotate: -90,
             });
         }
         if (heightRightRef.current) {
-            gsap.set(heightRightRef.current, { 
+            gsap.set(heightRightRef.current, {
                 x: maxX + 20,
-                y: minY + shapeHeight / 2, 
-                xPercent: -60, 
-                yPercent: -85 ,
-                rotate:90,
+                y: minY + shapeHeight / 2,
+                xPercent: -60,
+                yPercent: -85,
+                rotate: 90,
             });
         }
 
-        // Offset Labels
-        // if (offsetTopRef.current) {
-        //     gsap.set(offsetTopRef.current, {
-        //         x: minX + shapeWidth / 2,
-        //         y: minY / 2, 
-        //         xPercent: -50,
-        //         yPercent: -50,
-        //     });
-        // }
-        // if (offsetBottomRef.current) {
-        //     gsap.set(offsetBottomRef.current, {
-        //         x: minX + shapeWidth / 2,
-        //         y: maxY + currentOffsetBottom / 2,
-        //         xPercent: -50,
-        //         yPercent: -50,
-        //     });
-        // }
-        // if (offsetLeftRef.current) {
-        //     gsap.set(offsetLeftRef.current, {
-        //         x: minX / 2, 
-        //         y: minY + shapeHeight / 2,
-        //         xPercent: -50,
-        //         yPercent: -50,
-        //     });
-        // }
-        // if (offsetRightRef.current) {
-        //     gsap.set(offsetRightRef.current, {
-        //         x: maxX + currentOffsetRight / 2, 
-        //         y: minY + shapeHeight / 2,
-        //         xPercent: -50,
-        //         yPercent: -50,
-        //     });
-        // }
 
         // --- Position draggable edge handles (unchanged) ---
         edgeRefs.current.forEach((edge, i) => {
@@ -180,7 +175,7 @@ const ShapePreview3 = () => {
     useEffect(() => {
         if (!stageRef.current) return;
 
-        // Cleanup: Kill old Draggable instances
+        // -----Cleanup: Kill old Draggable instances----
         gsap.utils.toArray([...pointRefs.current, ...edgeRefs.current]).forEach(
             (el) => Draggable.get(el)?.kill()
         );
@@ -213,7 +208,7 @@ const ShapePreview3 = () => {
 
                     const el1 = pointRefs.current[i];
                     const el2 = pointRefs.current[(i + 1) % pointRefs.current.length];
-                    
+
                     gsap.set([el1, el2], {
                         x: `+=${dx}`,
                         y: `+=${dy}`,
@@ -226,8 +221,8 @@ const ShapePreview3 = () => {
 
         // Initial draw
         drawShape();
-        
-    }, [points.length]); 
+
+    }, [points.length]);
 
 
     return (
@@ -236,19 +231,13 @@ const ShapePreview3 = () => {
             style={{
                 width: "100%",
                 height: "100%",
-                minHeight:"calc(100% - 100px)",
+                minHeight: "400px",
                 position: "relative",
-                overflow: "hidden", 
+                overflow: "hidden",
                 padding: "10px",
             }}
         >
-            {/* Stage-level dimensions (total width/height) */}
-            {/* <div style={{ position: "absolute", top: 10, left: "50%", transform: "translateX(-50%)", color: "#555", fontSize: "12px", zIndex: 1 }}>
-                {dimensions.stageWidth.toFixed(0)} px
-            </div> */}
-            {/* <div style={{ position: "absolute", top: "50%", right: 10, transform: "translateY(-50%)", color: "#555", fontSize: "12px", zIndex: 1 }}>
-                {dimensions.stageHeight.toFixed(0)} px
-            </div> */}
+            
 
             {/* SVG Shape Layer */}
             <svg
@@ -258,7 +247,7 @@ const ShapePreview3 = () => {
                     left: 0,
                     width: "100%",
                     height: "100%",
-                    pointerEvents: "none", 
+                    pointerEvents: "none",
                 }}
             >
                 <defs>
@@ -276,7 +265,7 @@ const ShapePreview3 = () => {
             </svg>
 
             {/* --- Dynamic Measurement Labels --- */}
-            
+
             {/* Inner Shape Width - Top */}
             <MeasurementLabel ref={widthTopRef}>
                 {dimensions.shapeWidth.toFixed(0)} cm
@@ -294,22 +283,7 @@ const ShapePreview3 = () => {
                 {dimensions.shapeHeight.toFixed(0)} cm
             </MeasurementLabel>
 
-            {/* Offset Top */}
-            {/* <MeasurementLabel ref={offsetTopRef} isOffsetLabel>
-                {dimensions.offsetTop.toFixed(0)} cm
-            </MeasurementLabel> */}
-            {/* Offset Bottom */}
-            {/* <MeasurementLabel ref={offsetBottomRef} isOffsetLabel>
-                {dimensions.offsetBottom.toFixed(0)} cm
-            </MeasurementLabel> */}
-            {/* Offset Left */}
-            {/* <MeasurementLabel ref={offsetLeftRef} isOffsetLabel>
-                {dimensions.offsetLeft.toFixed(0)} cm
-            </MeasurementLabel> */}
-            {/* Offset Right */}
-            {/* <MeasurementLabel ref={offsetRightRef} isOffsetLabel>
-                {dimensions.offsetRight.toFixed(0)} cm
-            </MeasurementLabel> */}
+            
 
             {/* Draggable Edges (line midpoints) - Styling to match your image */}
             {points.map((_, i) => (
@@ -325,15 +299,13 @@ const ShapePreview3 = () => {
                         borderRadius: "2px",
                         cursor: "move",
                         touchAction: "none",
-                        top: 0, 
+                        top: 0,
                         left: 0,
                         transform: "translate(-50%,-50%)", // Center handle
                         zIndex: 3,
-                        // Only apply this style to the bottom edge if it's the 3rd element (index 2)
-                        // Or you could make a specific ref for the bottom edge
-                        ...(i === 2 && { 
-                            background: "red", // Solid red for bottom edge
-                            border: "1px solid darkred" 
+                        ...(i === 2 && {
+                            background: "red",
+                            border: "1px solid darkred"
                         })
                     }}
                 ></div>
@@ -347,7 +319,7 @@ const ShapePreview3 = () => {
                         position: "absolute",
                         top: p.y,
                         left: p.x,
-                        transform: "translate(-50%, -50%)", 
+                        transform: "translate(-50%, -50%)",
                         zIndex: 5,
                     }}
                 >
@@ -361,9 +333,17 @@ const ShapePreview3 = () => {
                             borderRadius: "50%",
                             cursor: "grab",
                             touchAction: "none",
-                            transform: "translate(0, 0)", 
+                            transform: "translate(0, 0)",
+                            position: "relative",
                         }}
-                    ></div>
+                    >
+                        {/* Optional: Display corner angle */}
+                        <div className={`corner_angle_${i}`}>
+
+                            {cornerAngles[i].toFixed(0)}°
+                            
+                        </div>
+                    </div>
                 </div>
             ))}
         </div>
@@ -373,7 +353,7 @@ const ShapePreview3 = () => {
 // Simple MeasurementLabel component for consistent styling and ref forwarding
 const MeasurementLabel = React.forwardRef(({ children, isOffsetLabel }, ref) => (
     <div
-    className="lengthIndicator"
+        className="lengthIndicator"
         ref={ref}
         style={{
             position: "absolute",

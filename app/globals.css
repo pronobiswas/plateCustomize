@@ -61,7 +61,7 @@ body {
   position:absolute;
   top: 50%;
   right:110%;
-  width: 100%;
+  width: 70%;
   height: 4px;
   background-color: #000000;
   border-top-left-radius: 5px;
@@ -73,7 +73,7 @@ body {
   position:absolute;
   top: 50%;
   left:110%;
-  width: 100%;
+  width: 70%;
   height: 4px;
   background-color: #000000;
   border-top-right-radius: 5px;
@@ -106,4 +106,39 @@ body {
   height: 5px;
   transform: translateY(-50%);
   background-color: yellow;
+}
+
+
+.corner_angle_0, .corner_angle_1, .corner_angle_2, .corner_angle_3 {
+    position: absolute;
+    padding: 8px 7px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    font-size: 12px;
+    color: #ffffff;
+    background: #77777700;
+}
+.corner_angle_0 {
+    top: 0px;
+    left: 0px;
+    border-right: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+}
+.corner_angle_1 {
+    top: 0px;
+    right: 0px;
+    border-left: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+}
+.corner_angle_2 {
+    bottom: 0px;
+    right: 0px;
+    border-left: 1px solid #cccccc;
+    border-top: 1px solid #cccccc;
+}
+.corner_angle_3 {
+    bottom: 0px;
+    left: 0px;
+    border-right: 1px solid #cccccc;
+    border-top: 1px solid #cccccc;
 }

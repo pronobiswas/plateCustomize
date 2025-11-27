@@ -7,6 +7,10 @@ import Image from "next/image";
 import Link from 'next/link';
 import ShapePreview6 from '../../_component/getstarted/shapePreview6';
 import ShapePreview2 from '../../_component/getstarted/shapePreview2';
+import Ushape from './ushape';
+import HorizontalRectangle from './horizontalrectangle';
+import ShapePreview3 from '../../_component/getstarted/ShapePreview3';
+import ShapePreview5 from '../../_component/getstarted/shapePreview5';
 
 export default function ClientComponent() {
     const [previewImage, setPreviewImage] = useState('');
@@ -87,7 +91,11 @@ export default function ClientComponent() {
                             <div className='w-full aspect-[1/1] max-w-3xl max-h-3xl flex flex-col items-center justify-center'>
                                 <div className='w-full'>
                                     {previewComponent === 1 && <ShapePreview6 />}
-                                    {previewComponent === 2 && <ShapePreview2 />}
+                                    {previewComponent === 2 && <Ushape />}
+                                    {previewComponent === 3 && <HorizontalRectangle />}
+                                    {previewComponent === 4 && <ShapePreview2 />}
+                                    {previewComponent === 5 && <ShapePreview3 />}
+                                    {previewComponent === 6 && <ShapePreview5 />}
                                 </div>
                                 {
                                     previewImage &&
