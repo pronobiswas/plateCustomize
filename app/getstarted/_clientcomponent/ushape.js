@@ -11,7 +11,7 @@ export default function ResizableRoundedShape() {
   const [radius, setRadius] = useState(40);
 
   // Track which drag is active
-  const [resizeSide, setResizeSide] = useState(null); // 'right' or 'bottom'
+  const [resizeSide, setResizeSide] = useState(null); 
   const [isRounding, setIsRounding] = useState(false);
 
   // =========================

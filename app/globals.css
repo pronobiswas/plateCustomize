@@ -142,3 +142,14 @@ body {
     border-right: 1px solid #cccccc;
     border-top: 1px solid #cccccc;
 }
+
+.rectangle_with_radious_0, .rectangle_with_radious_1, .rectangle_with_radious_2, .rectangle_with_radious_3 {
+  position: absolute;
+  padding: 8px 7px;
+  border: 1px solid red;
+}
+.rectangle_with_radious_0{
+  top: -50px;
+  left: 50%;
+  transform: translateX(-50%);
+}

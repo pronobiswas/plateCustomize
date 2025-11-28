@@ -4,6 +4,7 @@
 'use client'
 import React, { useState } from 'react'
 import Image from "next/image";
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ShapePreview6 from '../../_component/getstarted/shapePreview6';
 import ShapePreview2 from '../../_component/getstarted/shapePreview2';
@@ -11,6 +12,7 @@ import Ushape from './ushape';
 import HorizontalRectangle from './horizontalrectangle';
 import ShapePreview3 from '../../_component/getstarted/ShapePreview3';
 import ShapePreview5 from '../../_component/getstarted/shapePreview5';
+import ResizableRoundedShape from './resizableroundedshape';
 
 export default function ClientComponent() {
     const [previewImage, setPreviewImage] = useState('');
@@ -93,11 +95,12 @@ export default function ClientComponent() {
                                     {previewComponent === 1 && <ShapePreview6 />}
                                     {previewComponent === 2 && <Ushape />}
                                     {previewComponent === 3 && <HorizontalRectangle />}
-                                    {previewComponent === 4 && <ShapePreview2 />}
+                                    {previewComponent === 4 && <ShapePreview5 />}
                                     {previewComponent === 5 && <ShapePreview3 />}
-                                    {previewComponent === 6 && <ShapePreview5 />}
+                                    {previewComponent === 6 && <ResizableRoundedShape />}
+                                    {/* {previewComponent === 6 && <ShapePreview2 />} */}
                                 </div>
-                                {
+                                {/* {
                                     previewImage &&
                                     <div className='w-full flex justify-end'>
                                         <Link href="/previewandsummary">
@@ -107,7 +110,7 @@ export default function ClientComponent() {
                                             </button>
                                         </Link>
                                     </div>
-                                }
+                                } */}
                             </div>
                         </div>
                     </div>

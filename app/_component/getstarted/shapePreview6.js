@@ -29,7 +29,6 @@ const ShapePreview6 = () => {
     const newPoints = pointRefs.current.map((el) => {
       const rect = el.getBoundingClientRect();
        return {
-         // Calculate center point relative to the stage
          x: rect.left - stageRect.left + rect.width / 2,
          y: rect.top - stageRect.top + rect.height / 2,
        };
@@ -172,13 +171,17 @@ const ShapePreview6 = () => {
     
   }, [points.length]);
 
+  // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+  // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+  // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+  // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
   return (
     <div
       ref={stageRef}
       style={{
         width: "100%",
-        height: "500px",
+        height: "100%",
         position: "relative",
         overflow: "hidden",
         padding: "10px",

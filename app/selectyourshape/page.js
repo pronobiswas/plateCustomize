@@ -8,6 +8,7 @@ import ShapePreview3 from '../_component/getstarted/ShapePreview3'
 import ShapePreview5 from '../_component/getstarted/shapePreview5'
 import ShapePreview6 from '../_component/getstarted/shapePreview6'
 import ShapePreview2 from '../_component/getstarted/shapePreview2'
+import OvalShape from '../_component/getstarted/ovalshape'
 
 export default function page() {
   const [previewShape , setPreviewShape] = useState();
@@ -42,6 +43,11 @@ export default function page() {
       name:"shape6",
       image:"url/image"
     },
+    {
+      id:7,
+      name:"shape7",
+      image:"url/image"
+    },
   ]
   const  handleShapePreview =(shape)=>{
     const a= shape;
@@ -70,6 +76,8 @@ export default function page() {
               }
             </ul>
         </section>
+
+        {/* ======component preview shape======== */}
         <section className='w-full h-full overflow-y-scroll md:w-4/6 xl:w-5/5'>
             preview your shape
             {
@@ -89,6 +97,9 @@ export default function page() {
             }
             {
               previewShape===6 && <ShapePreview2/>
+            }
+            {
+              previewShape===7 && <OvalShape/>
             }
 
             {/* <ShapePreview/> */}
