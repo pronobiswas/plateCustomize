@@ -105,7 +105,7 @@ const ShapePreview5 = () => {
             if (text) {
                 gsap.set(text, {
                     x: midX,
-                    y: midY - 15,
+                    y: midY - 55,
                     xPercent: -50,
                     yPercent: -50,
                     rotation: Math.atan2(dy, dx) * 180 / Math.PI,
@@ -183,17 +183,17 @@ const ShapePreview5 = () => {
                 {cornerRadius.map((r, i) => (
                     <div key={i} className="flex items-center space-x-3">
                         <label className="w-24 font-medium text-gray-700">
-                            Corner {i + 1}: {r}px
+                            Corner {i + 1}: {(r*3.1416).toFixed(2)}
                         </label>
 
                         <input
                             type="range"
                             min="0"
-                            max="100"
+                            max="300"
                             value={r}
                             onChange={(e) => {
                                 const newR = [...cornerRadius];
-                                newR[i] = Number(e.target.value); // update only one
+                                newR[i] = Number(e.target.value);
                                 setCornerRadius(newR);
                             }}
                             className="w-48"
@@ -206,20 +206,16 @@ const ShapePreview5 = () => {
             {/* Stage */}
             <div
                 ref={stageRef}
-                className="w-full max-w-2xl bg-white border-4 border-dashed border-gray-300 rounded-xl shadow-inner relative"
+                id="shape444"
+                className=" w-full max-w-2xl border-4 border-dashed border-gray-300 rounded-xl shadow-inner relative"
                 style={{ height: 500, overflow: "hidden", touchAction: "none" }}
             >
                 <svg className="absolute top-0 left-0 w-full h-full pointer-events-none">
-                    <defs>
-                        <linearGradient id="shapeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="#818CF8" />
-                            <stop offset="100%" stopColor="#3B82F6" />
-                        </linearGradient>
-                    </defs>
+                   
 
                     <path
                         ref={shapeRef}
-                        fill="url(#shapeGradient)"
+                        fill="black"
                         stroke="#1E3A8A"
                         strokeWidth="3"
                     />
@@ -232,7 +228,7 @@ const ShapePreview5 = () => {
                         ref={(el) => (edgeTextRefs.current[i] = el)}
                         className="absolute text-blue-900 bg-white/90 px-2 py-1 rounded-full text-sm font-bold pointer-events-none shadow"
                     >
-                        {String.fromCharCode(65 + i)}: {len.toFixed(1)} px
+                        {String.fromCharCode(65 + i)}: {len.toFixed(1)} cm
                     </div>
                 ))}
 

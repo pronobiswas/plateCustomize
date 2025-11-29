@@ -9,9 +9,9 @@ export default function OvalShape() {
     const svgRef = useRef(null);
     const handleRef = useRef(null);
     const circleRef = useRef(null);
+    const sta = useRef(null);
 
-    const [radius, setRadius] = useState(45); // percentage radius
-
+    const [radius, setRadius] = useState(45);
     useEffect(() => {
         const svg = svgRef.current;
         const handle = handleRef.current;

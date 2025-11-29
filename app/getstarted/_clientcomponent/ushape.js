@@ -5,10 +5,10 @@ export default function ResizableRoundedShape() {
   const boxRef = useRef(null);
 
   // State for width, height
-  const [size, setSize] = useState({ width: 300, height: 200 });
+  const [size, setSize] = useState({ width: 200, height: 160 });
 
   // Top corner radius
-  const [radius, setRadius] = useState(40);
+  const [radius, setRadius] = useState(100);
 
   // Track which drag is active
   const [resizeSide, setResizeSide] = useState(null); 
@@ -74,9 +74,9 @@ export default function ResizableRoundedShape() {
           Live Width / Height / Radius Display
       ========================= */}
       <div className="absolute top-4 left-4 bg-white p-3 rounded shadow-lg">
-        <p><strong>Width:</strong> {size.width.toFixed(0)} px</p>
-        <p><strong>Height:</strong> {size.height.toFixed(0)} px</p>
-        <p><strong>Top Radius:</strong> {radius.toFixed(0)} px</p>
+        <p><strong>Width:</strong> {size.width.toFixed(0)} cm</p>
+        <p><strong>Height:</strong> {size.height.toFixed(0)} cm</p>
+        <p><strong>Top Radius:</strong> {radius.toFixed(0)} cm</p>
       </div>
 
       {/* =========================

@@ -84,14 +84,16 @@ export default function ClientComponent() {
                         ))}
                     </div>
                 </aside>
-                <div className='w-2/3 h-screen border-amber-500'>
+                <div className='w-2/3 h-auto'>
                     {/* ---content wrapper--- */}
-                    <div className='w-full h-full'>
+                    <div className='w-full h-full p-5'>
                         {/* ===image_preview_wrapper==== */}
-                        <div className='w-full h-[100vh - 100px] flex justify-center p-12 '>
+                        <div className='w-full h-full flex justify-center'> 
                             {/* ===preview box=== */}
-                            <div className='w-full aspect-[1/1] max-w-3xl max-h-3xl flex flex-col items-center justify-center'>
-                                <div className='w-full'>
+                            <div className='w-full h-full flex flex-col items-center justify-center'>
+                                {
+                                    previewComponent ?
+                                <div className='w-full h-full'>
                                     {previewComponent === 1 && <ShapePreview6 />}
                                     {previewComponent === 2 && <Ushape />}
                                     {previewComponent === 3 && <HorizontalRectangle />}
@@ -100,7 +102,10 @@ export default function ClientComponent() {
                                     {previewComponent === 6 && <ResizableRoundedShape />}
                                     {/* {previewComponent === 6 && <ShapePreview2 />} */}
                                 </div>
-                                {/* {
+                                :
+                                <ShapePreview6/>
+                                }
+                                {
                                     previewImage &&
                                     <div className='w-full flex justify-end'>
                                         <Link href="/previewandsummary">
@@ -110,7 +115,7 @@ export default function ClientComponent() {
                                             </button>
                                         </Link>
                                     </div>
-                                } */}
+                                }
                             </div>
                         </div>
                     </div>

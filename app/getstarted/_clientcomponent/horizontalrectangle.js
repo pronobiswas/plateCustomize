@@ -11,126 +11,150 @@ export default function ProportionalRectangle() {
   const widthHandleRef = useRef(null);
   const heightHandleRef = useRef(null);
 
-  // Base width and height
+  // Base width and height (state controls visual SVG size)
   const [dimensions, setDimensions] = useState({ width: 305, height: 355 });
 
-  // Keep original ratio
+  // Keep original ratio (recalculated each render — stays consistent)
   const ratio = dimensions.height / dimensions.width;
 
-  let baseWidth = 305;
-  let baseHeight = 355;
+  // Mutable base dimensions used during dragging (doesn't cause re-renders)
+  const baseDimensions = useRef({ width: 305, height: 355 });
+
+  // Constant viewBox internal size
+  const SVG_INNER_WIDTH = 300;
+  const SVG_INNER_HEIGHT = SVG_INNER_WIDTH * ratio;
 
   const updateHandles = () => {
-    if (!svgRef.current || !widthHandleRef.current || !heightHandleRef.current) return;
+    if (!svgRef.current || !widthHandleRef.current || !heightHandleRef.current || !containerRef.current) return;
 
     const rect = svgRef.current.getBoundingClientRect();
     const containerRect = containerRef.current.getBoundingClientRect();
+    const handleSize = 6;
 
-    // Right handle
-    widthHandleRef.current.style.left = rect.right - containerRect.left - 3 + 'px';
+    // ======vertical (width)======
+    widthHandleRef.current.style.left = rect.right - containerRect.left - (handleSize / 2) + 'px';
     widthHandleRef.current.style.top = rect.top - containerRect.top + 'px';
     widthHandleRef.current.style.height = rect.height + 'px';
 
-    // Bottom handle
+    // =====horizontal (height)=====
     heightHandleRef.current.style.left = rect.left - containerRect.left + 'px';
-    heightHandleRef.current.style.top = rect.bottom - containerRect.top - 3 + 'px';
+    heightHandleRef.current.style.top = rect.bottom - containerRect.top - (handleSize / 2) + 'px';
     heightHandleRef.current.style.width = rect.width + 'px';
   };
+
 
   useEffect(() => {
     updateHandles();
   }, [dimensions]);
 
   useEffect(() => {
-    const svg = svgRef.current;
+    if (!widthHandleRef.current || !heightHandleRef.current) return;
 
-    // Width draggable (scale proportionally)
-    Draggable.create(widthHandleRef.current, {
+    const MIN_SIZE = 50; 
+
+    const widthDraggable = Draggable.create(widthHandleRef.current, {
       type: 'x',
-      bounds: { minX: -150, maxX: 800 },
       onDrag() {
-        let newWidth = baseWidth + this.x;
-        if (newWidth < 50) newWidth = 50;
-        let newHeight = newWidth * ratio;
-
-        gsap.set(svg, { width: newWidth, height: newHeight });
+        // compute new width based on base + drag delta
+        let newWidth = baseDimensions.current.width + this.x;
+        if (newWidth < MIN_SIZE) newWidth = MIN_SIZE;
+        const newHeight = newWidth * ratio;
         setDimensions({ width: newWidth, height: newHeight });
-        updateHandles();
       },
       onDragEnd() {
-        baseWidth = dimensions.width;
-        baseHeight = dimensions.height;
-        gsap.to(this.target, { x: 0, duration: 0.2 });
+        let finalWidth = baseDimensions.current.width + this.x;
+        if (finalWidth < MIN_SIZE) finalWidth = MIN_SIZE;
+        const finalHeight = finalWidth * ratio;
+        // ======commit to base========
+        baseDimensions.current.width = finalWidth;
+        baseDimensions.current.height = finalHeight;
+        // ======visually reset handle transform to zero====
+        gsap.to(this.target, { x: 0, duration: 0.15 });
       }
-    });
+    })[0];
 
-    // Height draggable (scale proportionally)
-    Draggable.create(heightHandleRef.current, {
+    //===== Height draggable (vertical)==========
+    const heightDraggable = Draggable.create(heightHandleRef.current, {
       type: 'y',
-      bounds: { minY: -150, maxY: 800 },
       onDrag() {
-        let newHeight = baseHeight + this.y;
-        if (newHeight < 50) newHeight = 50;
-        let newWidth = newHeight / ratio;
-
-        gsap.set(svg, { width: newWidth, height: newHeight });
+        let newHeight = baseDimensions.current.height + this.y;
+        if (newHeight < MIN_SIZE) newHeight = MIN_SIZE;
+        const newWidth = newHeight / ratio;
         setDimensions({ width: newWidth, height: newHeight });
-        updateHandles();
       },
       onDragEnd() {
-        baseWidth = dimensions.width;
-        baseHeight = dimensions.height;
-        gsap.to(this.target, { y: 0, duration: 0.2 });
+        let finalHeight = baseDimensions.current.height + this.y;
+        if (finalHeight < MIN_SIZE) finalHeight = MIN_SIZE;
+        const finalWidth = finalHeight / ratio;
+        baseDimensions.current.width = finalWidth;
+        baseDimensions.current.height = finalHeight;
+        gsap.to(this.target, { y: 0, duration: 0.15 });
       }
-    });
+    })[0];
 
-    window.addEventListener('resize', updateHandles);
-    return () => window.removeEventListener('resize', updateHandles);
-  }, [dimensions]);
+
+    const onResize = () => {
+      updateHandles();
+    };
+    window.addEventListener('resize', onResize);
+
+    updateHandles();
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+      widthDraggable && widthDraggable.kill();
+      heightDraggable && heightDraggable.kill();
+    };
+    
+  }, [ratio]);
 
   return (
     <div
       ref={containerRef}
       className="relative w-full h-screen flex justify-center items-center bg-gray-200"
     >
-      {/* Live dimensions */}
+      {/* =====Live dimensions========== */}
       <div className="absolute top-4 left-4 bg-white p-3 rounded shadow-lg z-10">
         <p><strong>Width:</strong> {dimensions.width.toFixed(0)} px</p>
         <p><strong>Height:</strong> {dimensions.height.toFixed(0)} px</p>
         <p><strong>Ratio:</strong> {ratio.toFixed(2)}</p>
       </div>
 
-      {/* SVG Rectangle */}
+      {/* =====SVG Rectangle========== */}
       <svg
         ref={svgRef}
         width={dimensions.width}
         height={dimensions.height}
-        viewBox="0 0 3005 4355"
+        viewBox={`0 0 ${SVG_INNER_WIDTH} ${SVG_INNER_HEIGHT}`}
+        className="shadow-2xl"
+        style={{ display: 'block' }}
       >
-        <rect width="3005" height="4355" fill="#D9D9D9" />
+        <rect width={SVG_INNER_WIDTH} height={SVG_INNER_HEIGHT} fill="black" />
       </svg>
 
-      {/* Width Handle */}
+  {/* ========widthHandleRef========= */}
       <div
         ref={widthHandleRef}
         style={{
           width: '6px',
-          background: '#444',
+          background: 'rgb(29, 78, 216)',
           cursor: 'ew-resize',
           position: 'absolute',
           zIndex: 20,
+          touchAction: 'none',
         }}
       ></div>
 
-      {/* Height Handle */}
+  {/* ===========widthHandleRef============ */}
       <div
         ref={heightHandleRef}
         style={{
           height: '6px',
-          background: '#444',
+          background: 'rgb(29, 78, 216)',
           cursor: 'ns-resize',
           position: 'absolute',
           zIndex: 20,
+          touchAction: 'none',
         }}
       ></div>
     </div>
