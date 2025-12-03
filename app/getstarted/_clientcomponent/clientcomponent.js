@@ -13,6 +13,7 @@ import HorizontalRectangle from './horizontalrectangle';
 import ShapePreview3 from '../../_component/getstarted/ShapePreview3';
 import ShapePreview5 from '../../_component/getstarted/shapePreview5';
 import ResizableRoundedShape from './resizableroundedshape';
+import Shape7 from '../../_component/getstarted/shape7';
 
 export default function ClientComponent() {
     const [previewImage, setPreviewImage] = useState('');
@@ -50,6 +51,12 @@ export default function ClientComponent() {
         },
         {
             id: 6,
+            name: 'Square',
+            img: '/Square.png',
+            previewImage: '/Square.png'
+        },
+        {
+            id: 7,
             name: 'Square',
             img: '/Square.png',
             previewImage: '/Square.png'
@@ -100,6 +107,7 @@ export default function ClientComponent() {
                                     {previewComponent === 4 && <ShapePreview5 />}
                                     {previewComponent === 5 && <ShapePreview3 />}
                                     {previewComponent === 6 && <ResizableRoundedShape />}
+                                    {previewComponent === 7 && <Shape7 />}
                                     {/* {previewComponent === 6 && <ShapePreview2 />} */}
                                 </div>
                                 :
