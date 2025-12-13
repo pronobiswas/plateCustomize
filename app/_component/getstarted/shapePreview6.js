@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
 
@@ -156,7 +156,7 @@ const ShapePreview6 = () => {
 
     drawShape();
 
-  }, [points.length]);
+  }, [points]);
 
   // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
   // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
@@ -181,7 +181,7 @@ const ShapePreview6 = () => {
           <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 10, color: '#333', backgroundColor: 'rgba(255,255,255,0.9)', padding: '5px', borderRadius: '5px', border: '1px solid #ccc' }}>
             Width: {edgeLengths[0] ? <span>{(edgeLengths[0]* 10 *  0.0264583333).toFixed(2)}</span> : 'N/A'} cm
             <br />
-            Height: {edgeLengths[1] ? <pan>{(edgeLengths[1]* 10 *  0.0264583333).toFixed(2)}</pan> : 'N/A'} cm
+            Height: {edgeLengths[1] ? <span>{(edgeLengths[1]* 10 *  0.0264583333).toFixed(2)}</span> : 'N/A'}
           </div>
 
           {/* SVG Shape */}

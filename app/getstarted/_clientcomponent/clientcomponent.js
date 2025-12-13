@@ -4,16 +4,17 @@
 'use client'
 import React, { useState } from 'react'
 import Image from "next/image";
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ShapePreview6 from '../../_component/getstarted/shapePreview6';
-import ShapePreview2 from '../../_component/getstarted/shapePreview2';
+// import ShapePreview2 from '../../_component/getstarted/shapePreview2';
 import Ushape from './ushape';
 import HorizontalRectangle from './horizontalrectangle';
 import ShapePreview3 from '../../_component/getstarted/ShapePreview3';
 import ShapePreview5 from '../../_component/getstarted/shapePreview5';
-import ResizableRoundedShape from './resizableroundedshape';
+// import ResizableRoundedShape from './resizableroundedshape';
 import Shape7 from '../../_component/getstarted/shape7';
+import Newshape1 from './newshape1';
 
 export default function ClientComponent() {
     const [previewImage, setPreviewImage] = useState('');
@@ -52,8 +53,8 @@ export default function ClientComponent() {
         {
             id: 6,
             name: 'Square',
-            img: '/Square.png',
-            previewImage: '/Square.png'
+            img: '/Rectangle7.png',
+            previewImage: '/Rectangle7.png'
         },
         {
             id: 7,
@@ -69,7 +70,7 @@ export default function ClientComponent() {
     return (
         <>
             <main className='flex '>
-                <aside className='w-1/3 min-h-screen border-r-2'>
+                <aside className='w-1/3 h-screen border-r-2 overflow-y-scroll '>
                     {/* ----shape list wrapper---- */}
                     <div className='w-full grid grid-cols-1 lg:grid-cols-2 gap-4 p-5'>
                         {allShapes.map((shape, i) => (
@@ -106,7 +107,7 @@ export default function ClientComponent() {
                                     {previewComponent === 3 && <HorizontalRectangle />}
                                     {previewComponent === 4 && <ShapePreview5 />}
                                     {previewComponent === 5 && <ShapePreview3 />}
-                                    {previewComponent === 6 && <ResizableRoundedShape />}
+                                    {previewComponent === 6 && <Newshape1 />}
                                     {previewComponent === 7 && <Shape7 />}
                                     {/* {previewComponent === 6 && <ShapePreview2 />} */}
                                 </div>
