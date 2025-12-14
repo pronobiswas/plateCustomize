@@ -330,13 +330,16 @@ export default function Elshape( {points} ) {
                     height: 600,
                     border: '2px solid #d33',
                     display: 'block',
-                    backgroundColor: '#999',
+                    backgroundColor: '#000',
                     backgroundImage: `
                     linear-gradient(#666 1px, transparent 1px),
-                    linear-gradient(90deg, #666 1px, transparent 1px),
-                    linear-gradient(45deg, rgba(255,255,255,0.7) 5px, transparent 1px)
+                    linear-gradient(90deg, #666 1px, transparent 1px)
                     `,
-                    backgroundSize: '15px 15px',
+                    // linear-gradient(135deg, green 2px, transparent 5px),
+                    //     linear-gradient(45deg, red 2px, transparent 5px),
+                    //     linear-gradient(305deg, blue 2px, transparent 5px),
+                    //     linear-gradient(230deg, yellow 2px, transparent 5px)
+                    backgroundSize: '8px 8px',
                     cursor: hoveredCorner !== null || hoveredEdge !== null ? 'pointer' : 'default'
                 }}
             />

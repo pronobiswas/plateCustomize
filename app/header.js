@@ -8,7 +8,9 @@ export default function Header() {
       <nav className='flex items-center justify-between py-7 px-5'>
         {/* ---logo---- */}
         <div className='w-full max-w-[220px]'>
+          <Link href='/'>
           <img src={"/headerLogo.png"} className='w-ful aspect-[220/35] object-cover'/>
+          </Link>
         </div>
         {/* ----menu--- */}
         <div className='hidden lg:block'>

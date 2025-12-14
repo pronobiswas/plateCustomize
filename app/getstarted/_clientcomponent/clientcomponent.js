@@ -60,14 +60,14 @@ export default function ClientComponent() {
         {
             id: 7,
             name: 'Square',
-            img: '/Square.png',
+            img: '/shape3.png',
             previewImage: '/Square.png'
         },
         {
             id: 8,
             name: 'Lshape',
-            img: '/shape8.png',
-            previewImage: '/Rectangle7.png'
+            img: '/lshape.png',
+            previewImage: '/lshape.png'
         },
     ]
     const handleShapeClick = (item) => {
@@ -132,7 +132,7 @@ export default function ClientComponent() {
                                             {previewComponent === 5 && <ShapePreview3 />}
                                             {previewComponent === 6 && <Newshape1 />}
                                             {previewComponent === 7 && <Shape7 />}
-                                            {previewComponent === 8 && <Elshape points={originalPointsRef} />}
+                                            {previewComponent === 8 && <Elshape points={points} />}
                                             {/* {previewComponent === 6 && <ShapePreview2 />} */}
                                         </div>
                                         :
