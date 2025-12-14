@@ -15,6 +15,7 @@ import ShapePreview5 from '../../_component/getstarted/shapePreview5';
 // import ResizableRoundedShape from './resizableroundedshape';
 import Shape7 from '../../_component/getstarted/shape7';
 import Newshape1 from './newshape1';
+import Elshape from './elshape';
 
 export default function ClientComponent() {
     const [previewImage, setPreviewImage] = useState('');
@@ -53,7 +54,7 @@ export default function ClientComponent() {
         {
             id: 6,
             name: 'Square',
-            img: '/Rectangle7.png',
+            img: '/shape8.png',
             previewImage: '/Rectangle7.png'
         },
         {
@@ -62,11 +63,33 @@ export default function ClientComponent() {
             img: '/Square.png',
             previewImage: '/Square.png'
         },
+        {
+            id: 8,
+            name: 'Lshape',
+            img: '/shape8.png',
+            previewImage: '/Rectangle7.png'
+        },
     ]
     const handleShapeClick = (item) => {
         setPreviewImage(item.img)
         setPreviewComponent(item.id)
     }
+    const points = [
+        { x: 100, y: 0 },
+        { x: 200, y: 0 },
+        { x: 200, y: 200 },
+        { x: 0, y: 200 },
+        { x: 0, y: 100 },
+        { x: 100, y: 100 },
+    ]
+    const originalPointsRef = [
+        { x: 66.0855, y: 0 },
+        { x: 163.126, y: 0 },
+        { x: 227, y: 64.4295 },
+        { x: 227, y: 240 },
+        { x: 0, y: 240 },
+        { x: 0, y: 64.4295 },
+    ];
     return (
         <>
             <main className='flex '>
@@ -96,23 +119,24 @@ export default function ClientComponent() {
                     {/* ---content wrapper--- */}
                     <div className='w-full h-full p-5'>
                         {/* ===image_preview_wrapper==== */}
-                        <div className='w-full h-full flex justify-center'> 
+                        <div className='w-full h-full flex justify-center'>
                             {/* ===preview box=== */}
                             <div className='w-full h-full flex flex-col items-center justify-center'>
                                 {
                                     previewComponent ?
-                                <div className='w-full h-full'>
-                                    {previewComponent === 1 && <ShapePreview6 />}
-                                    {previewComponent === 2 && <Ushape />}
-                                    {previewComponent === 3 && <HorizontalRectangle />}
-                                    {previewComponent === 4 && <ShapePreview5 />}
-                                    {previewComponent === 5 && <ShapePreview3 />}
-                                    {previewComponent === 6 && <Newshape1 />}
-                                    {previewComponent === 7 && <Shape7 />}
-                                    {/* {previewComponent === 6 && <ShapePreview2 />} */}
-                                </div>
-                                :
-                                <ShapePreview6/>
+                                        <div className='w-full h-full'>
+                                            {previewComponent === 1 && <ShapePreview6 />}
+                                            {previewComponent === 2 && <Ushape />}
+                                            {previewComponent === 3 && <HorizontalRectangle />}
+                                            {previewComponent === 4 && <ShapePreview5 />}
+                                            {previewComponent === 5 && <ShapePreview3 />}
+                                            {previewComponent === 6 && <Newshape1 />}
+                                            {previewComponent === 7 && <Shape7 />}
+                                            {previewComponent === 8 && <Elshape points={originalPointsRef} />}
+                                            {/* {previewComponent === 6 && <ShapePreview2 />} */}
+                                        </div>
+                                        :
+                                        <ShapePreview6 />
                                 }
                                 {
                                     previewImage &&

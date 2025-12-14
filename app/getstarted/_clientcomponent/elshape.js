@@ -1,6 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-export default function Newshape1() {
+// const svg = `
+// <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+// <path d="M100 100V0 H200V100 V200H0 V100H100 Z" fill="black"/>
+// </svg>
+
+// `
+
+export default function Elshape( {points} ) {
+
     const canvasRef = useRef(null);
     const canvasWrapperRef = useRef(null);
     const [lineData, setLineData] = useState([]);
@@ -8,14 +16,17 @@ export default function Newshape1() {
     const BASE_WIDTH = 227;
     const BASE_HEIGHT = 240;
 
-    const originalPointsRef = useRef([
-        { x: 66.0855, y: 0 },
-        { x: 163.126, y: 0 },
-        { x: 227, y: 64.4295 },
-        { x: 227, y: 240 },
-        { x: 0, y: 240 },
-        { x: 0, y: 64.4295 },
-    ]);
+    
+    // const originalPointsRef = useRef([
+    //     { x: 100, y: 0 },
+    //     { x: 200, y: 0 },
+    //     { x: 200, y: 200 },
+    //     { x: 0, y: 200 },
+    //     { x: 0, y: 100 },
+    //     { x: 100, y: 100 },
+    // ]);
+    const originalPointsRef = useRef(points);
+
 
     const pointsRef = useRef([]);
     const colors = ['#360185', '#F4B342', '#CB9DF0', '#FFF9BF'];
@@ -329,6 +340,7 @@ export default function Newshape1() {
                     cursor: hoveredCorner !== null || hoveredEdge !== null ? 'pointer' : 'default'
                 }}
             />
+            <h1>hello world</h1>
         </div>
     );
 }
