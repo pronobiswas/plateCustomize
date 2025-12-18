@@ -1,7 +1,28 @@
+'use client';
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 export default function page() {
+    const [path, setPath] = useState('');
+    const [color, setColor] = useState('');
+    const svgRef = useRef(null);
+
+    useEffect(() => {
+        const savedPath = sessionStorage.getItem('svgPath');
+        const savedColor = sessionStorage.getItem('activeColor');
+        if (savedPath) {
+            setPath(savedPath);
+        }
+        if (savedColor) {
+            setColor(savedColor);
+        }
+        const svg = svgRef.current;
+        if (svgRef.current) {
+            svgRef.current.setAttribute('width', '100%');
+            svgRef.current.setAttribute('height', '100%');
+        }
+    }, []);
+
     return (
         <>
             <main className='w-full'>
@@ -19,8 +40,28 @@ export default function page() {
                     {/* ===summary wrapper=== */}
                     <div className='w-full p-5 flex gap-8'>
                         {/* --===image wrappert===-- */}
-                        <div className='w-1/2 border-2 border-gray-300'>
-                            <img src="/squre.png" alt="squre " />
+                        <div className='w-1/2 flex border-2 border-gray-300'>
+                            {path ? (
+                                <svg
+                                ref={svgRef}
+                                viewBox={`0 0 ${svgRef.current?.width || 600} ${svgRef.current?.height || 500}`}
+                                style={{
+                                    width: '100%',
+                                    maxHeight: '100%',
+                                    background: '#000',
+                                    border: '1px solid #444',
+                                    borderRadius: 4
+                                }}
+                            >
+                                <path
+                                    d={path}
+                                    fill={color}
+                                    fillRule="evenodd"
+                                />
+                            </svg>
+                            ) : (
+                                <p>No SVG path found</p>
+                            )}
                         </div>
                         {/* --===order wrapper===-- */}
                         <div className='w-1/2 py-24 px-12 border-2 border-gray-300'>
@@ -51,7 +92,7 @@ export default function page() {
                                 <div className='flex items-center justify-center gap-8 py-5'>
                                     <button className=' bg-gray-300 px-12 py-4'>Add to cart</button>
                                     <Link href="/checkout">
-                                    <button className=' bg-black px-12 py-4 text-white'>Order now</button>
+                                        <button className=' bg-black px-12 py-4 text-white'>Order now</button>
                                     </Link>
                                 </div>
                                 <div className='w-full flex items-center justify-center gap-4'>

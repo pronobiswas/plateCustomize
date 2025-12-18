@@ -56,7 +56,7 @@ export default function ElshapeEnhanced() {
         const dy = p2.y - p1.y;
         return Math.sqrt(dx * dx + dy * dy);
     };
-
+    // ======svg client bounding=====
     const getBoundingBox = (points) => {
         const xs = points.map(p => p.x);
         const ys = points.map(p => p.y);
@@ -69,13 +69,12 @@ export default function ElshapeEnhanced() {
             height: Math.max(...ys) - Math.min(...ys)
         };
     };
-
+    // =======objerver for hole=======
     const isPointInPolygon = (point, polygon) => {
         let inside = false;
         for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
             const xi = polygon[i].x, yi = polygon[i].y;
             const xj = polygon[j].x, yj = polygon[j].y;
-            
             const intersect = ((yi > point.y) !== (yj > point.y))
                 && (point.x < (xj - xi) * (point.y - yi) / (yj - yi) + xi);
             if (intersect) inside = !inside;
@@ -99,14 +98,14 @@ export default function ElshapeEnhanced() {
         if (!isPointInPolygon(hole, shapePoints)) {
             let minDist = Infinity;
             let closest = { x: hole.x, y: hole.y };
-            
+
             for (let i = 0; i < shapePoints.length; i++) {
                 const p1 = shapePoints[i];
                 const p2 = shapePoints[(i + 1) % shapePoints.length];
-                
+
                 const projected = projectPointOnSegment(hole, p1, p2);
                 const dist = distance(hole, projected);
-                
+
                 if (dist < minDist) {
                     minDist = dist;
                     const dx = hole.x - projected.x;
@@ -118,77 +117,77 @@ export default function ElshapeEnhanced() {
                     };
                 }
             }
-            
+
             return closest;
         }
         return hole;
     };
 
     const constrainCornerMove = (points, cornerIndex, newX, newY) => {
-        const testPoints = points.map((p, i) => 
+        const testPoints = points.map((p, i) =>
             i === cornerIndex ? { ...p, x: newX, y: newY } : { ...p }
         );
-        
+
         const bbox = getBoundingBox(testPoints);
-        
+
         if (bbox.width < MIN_WIDTH || bbox.height < MIN_HEIGHT) {
             const center = {
                 x: (bbox.minX + bbox.maxX) / 2,
                 y: (bbox.minY + bbox.maxY) / 2
             };
-            
+
             const dx = newX - center.x;
             const dy = newY - center.y;
             const angle = Math.atan2(dy, dx);
-            
+
             const widthDiff = Math.max(0, MIN_WIDTH - bbox.width);
             const heightDiff = Math.max(0, MIN_HEIGHT - bbox.height);
-            
+
             return {
                 x: newX + Math.cos(angle) * widthDiff / 2,
                 y: newY + Math.sin(angle) * heightDiff / 2
             };
         }
-        
+
         return { x: newX, y: newY };
     };
 
     const drawRoundedPolygon = (ctx, points) => {
         ctx.beginPath();
-        
+
         for (let i = 0; i < points.length; i++) {
             const curr = points[i];
             const next = points[(i + 1) % points.length];
             const prev = points[(i - 1 + points.length) % points.length];
-            
+
             const v1 = { x: curr.x - prev.x, y: curr.y - prev.y };
             const v2 = { x: next.x - curr.x, y: next.y - curr.y };
-            
+
             const len1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y);
             const len2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
-            
+
             const maxRadius = Math.min(len1 / 2, len2 / 2, curr.radius || 0);
-            
+
             if (maxRadius > 0) {
                 const ratio1 = maxRadius / len1;
                 const ratio2 = maxRadius / len2;
-                
+
                 const arcStart = {
                     x: curr.x - v1.x * ratio1,
                     y: curr.y - v1.y * ratio1
                 };
-                
+
                 const arcEnd = {
                     x: curr.x + v2.x * ratio2,
                     y: curr.y + v2.y * ratio2
                 };
-                
+
                 if (i === 0) {
                     ctx.moveTo(arcStart.x, arcStart.y);
                 } else {
                     ctx.lineTo(arcStart.x, arcStart.y);
                 }
-                
+
                 ctx.quadraticCurveTo(curr.x, curr.y, arcEnd.x, arcEnd.y);
             } else {
                 if (i === 0) {
@@ -198,47 +197,47 @@ export default function ElshapeEnhanced() {
                 }
             }
         }
-        
+
         ctx.closePath();
     };
 
     const generateSVGPath = (points, holes) => {
         let pathData = '';
-        
+
         // Generate outer path
         for (let i = 0; i < points.length; i++) {
             const curr = points[i];
             const next = points[(i + 1) % points.length];
             const prev = points[(i - 1 + points.length) % points.length];
-            
+
             const v1 = { x: curr.x - prev.x, y: curr.y - prev.y };
             const v2 = { x: next.x - curr.x, y: next.y - curr.y };
-            
+
             const len1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y);
             const len2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
-            
+
             const maxRadius = Math.min(len1 / 2, len2 / 2, curr.radius || 0);
-            
+
             if (maxRadius > 0) {
                 const ratio1 = maxRadius / len1;
                 const ratio2 = maxRadius / len2;
-                
+
                 const arcStart = {
                     x: curr.x - v1.x * ratio1,
                     y: curr.y - v1.y * ratio1
                 };
-                
+
                 const arcEnd = {
                     x: curr.x + v2.x * ratio2,
                     y: curr.y + v2.y * ratio2
                 };
-                
+
                 if (i === 0) {
                     pathData += `M ${arcStart.x.toFixed(2)} ${arcStart.y.toFixed(2)} `;
                 } else {
                     pathData += `L ${arcStart.x.toFixed(2)} ${arcStart.y.toFixed(2)} `;
                 }
-                
+
                 pathData += `Q ${curr.x.toFixed(2)} ${curr.y.toFixed(2)} ${arcEnd.x.toFixed(2)} ${arcEnd.y.toFixed(2)} `;
             } else {
                 if (i === 0) {
@@ -248,9 +247,9 @@ export default function ElshapeEnhanced() {
                 }
             }
         }
-        
+
         pathData += 'Z ';
-        
+
         // Add holes
         holes.forEach(hole => {
             pathData += `M ${(hole.x + hole.radius).toFixed(2)} ${hole.y.toFixed(2)} `;
@@ -258,7 +257,7 @@ export default function ElshapeEnhanced() {
             pathData += `A ${hole.radius.toFixed(2)} ${hole.radius.toFixed(2)} 0 1 0 ${(hole.x + hole.radius).toFixed(2)} ${hole.y.toFixed(2)} `;
             pathData += 'Z ';
         });
-        
+
         return pathData.trim();
     };
 
@@ -296,13 +295,13 @@ export default function ElshapeEnhanced() {
 
         // Draw main shape with holes
         drawRoundedPolygon(ctx, pts);
-        
+
         // Add holes to the path
         holes.forEach(hole => {
             ctx.moveTo(hole.x + hole.radius, hole.y);
             ctx.arc(hole.x, hole.y, hole.radius, 0, Math.PI * 2, true);
         });
-        
+
         ctx.fillStyle = activeColor;
         ctx.fill('evenodd');
 
@@ -584,7 +583,7 @@ export default function ElshapeEnhanced() {
     const exportToJSON = () => {
         const canvas = canvasRef.current;
         const bbox = getBoundingBox(pointsRef.current);
-        
+
         const exportData = {
             viewBox: `0 0 ${canvas.width} ${canvas.height}`,
             boundingBox: {
@@ -606,7 +605,7 @@ export default function ElshapeEnhanced() {
             svgPath: svgPathData,
             color: activeColor
         };
-        
+
         return JSON.stringify(exportData, null, 2);
     };
 
@@ -615,6 +614,12 @@ export default function ElshapeEnhanced() {
             alert('Copied to clipboard!');
         });
     };
+    const gotonextpage = () => {
+        console.log(svgPathData);
+        sessionStorage.setItem('svgPath', svgPathData);
+        sessionStorage.setItem('activeColor', activeColor);
+        window.location.href = '/previewandsummary';
+    }
 
     return (
         <div ref={canvasWrapperRef} style={{ width: '100%', minHeight: 600, padding: 20, background: '#1a1a1a' }}>
@@ -853,8 +858,17 @@ export default function ElshapeEnhanced() {
                                 />
                             </svg>
                         </div>
+
                     </>
                 )}
+                <div className='w-full flex justify-end'>
+                    <button
+                    onClick={gotonextpage}
+                        className='px-8 py-3 bg-white mt-8 mb-5'
+                    >
+                        next
+                    </button>
+                </div>
             </div>
         </div>
     );
