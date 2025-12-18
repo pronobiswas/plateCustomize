@@ -46,6 +46,8 @@ export default function ElshapeEnhanced() {
     const [hoveredEdge, setHoveredEdge] = useState(null);
     const [hoveredCorner, setHoveredCorner] = useState(null);
     const [hoveredHole, setHoveredHole] = useState(null);
+    const [svgPathData, setSvgPathData] = useState('');
+    const [showExport, setShowExport] = useState(false);
 
     const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
@@ -200,6 +202,66 @@ export default function ElshapeEnhanced() {
         ctx.closePath();
     };
 
+    const generateSVGPath = (points, holes) => {
+        let pathData = '';
+        
+        // Generate outer path
+        for (let i = 0; i < points.length; i++) {
+            const curr = points[i];
+            const next = points[(i + 1) % points.length];
+            const prev = points[(i - 1 + points.length) % points.length];
+            
+            const v1 = { x: curr.x - prev.x, y: curr.y - prev.y };
+            const v2 = { x: next.x - curr.x, y: next.y - curr.y };
+            
+            const len1 = Math.sqrt(v1.x * v1.x + v1.y * v1.y);
+            const len2 = Math.sqrt(v2.x * v2.x + v2.y * v2.y);
+            
+            const maxRadius = Math.min(len1 / 2, len2 / 2, curr.radius || 0);
+            
+            if (maxRadius > 0) {
+                const ratio1 = maxRadius / len1;
+                const ratio2 = maxRadius / len2;
+                
+                const arcStart = {
+                    x: curr.x - v1.x * ratio1,
+                    y: curr.y - v1.y * ratio1
+                };
+                
+                const arcEnd = {
+                    x: curr.x + v2.x * ratio2,
+                    y: curr.y + v2.y * ratio2
+                };
+                
+                if (i === 0) {
+                    pathData += `M ${arcStart.x.toFixed(2)} ${arcStart.y.toFixed(2)} `;
+                } else {
+                    pathData += `L ${arcStart.x.toFixed(2)} ${arcStart.y.toFixed(2)} `;
+                }
+                
+                pathData += `Q ${curr.x.toFixed(2)} ${curr.y.toFixed(2)} ${arcEnd.x.toFixed(2)} ${arcEnd.y.toFixed(2)} `;
+            } else {
+                if (i === 0) {
+                    pathData += `M ${curr.x.toFixed(2)} ${curr.y.toFixed(2)} `;
+                } else {
+                    pathData += `L ${curr.x.toFixed(2)} ${curr.y.toFixed(2)} `;
+                }
+            }
+        }
+        
+        pathData += 'Z ';
+        
+        // Add holes
+        holes.forEach(hole => {
+            pathData += `M ${(hole.x + hole.radius).toFixed(2)} ${hole.y.toFixed(2)} `;
+            pathData += `A ${hole.radius.toFixed(2)} ${hole.radius.toFixed(2)} 0 1 0 ${(hole.x - hole.radius).toFixed(2)} ${hole.y.toFixed(2)} `;
+            pathData += `A ${hole.radius.toFixed(2)} ${hole.radius.toFixed(2)} 0 1 0 ${(hole.x + hole.radius).toFixed(2)} ${hole.y.toFixed(2)} `;
+            pathData += 'Z ';
+        });
+        
+        return pathData.trim();
+    };
+
     const calculateLineData = () => {
         const points = pointsRef.current;
         if (!points || points.length === 0) return;
@@ -252,8 +314,8 @@ export default function ElshapeEnhanced() {
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
             const he = hoveredEdgeRef.current;
-            ctx.strokeStyle = he === i ? 'yellow' : 'rgba(255,0,0,0.3)';
-            ctx.lineWidth = he === i ? 4 : 1;
+            ctx.strokeStyle = he === i ? 'yellow' : 'rgba(255,0,0,0.6)';
+            ctx.lineWidth = he === i ? 4 : 2;
             ctx.stroke();
         }
 
@@ -278,12 +340,18 @@ export default function ElshapeEnhanced() {
             const hh = hoveredHoleRef.current;
             ctx.fillStyle = hh === i ? '#00ffff' : 'rgba(0,255,255,0.7)';
             ctx.fill();
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = 'gray';
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = '#0088cc';
             ctx.stroke();
         });
 
         calculateLineData();
+        updateSVGPath();
+    };
+
+    const updateSVGPath = () => {
+        const svgPath = generateSVGPath(pointsRef.current, holesRef.current);
+        setSvgPathData(svgPath);
     };
 
     const getMousePos = (e) => {
@@ -513,6 +581,41 @@ export default function ElshapeEnhanced() {
         draw();
     };
 
+    const exportToJSON = () => {
+        const canvas = canvasRef.current;
+        const bbox = getBoundingBox(pointsRef.current);
+        
+        const exportData = {
+            viewBox: `0 0 ${canvas.width} ${canvas.height}`,
+            boundingBox: {
+                x: bbox.minX,
+                y: bbox.minY,
+                width: bbox.width,
+                height: bbox.height
+            },
+            corners: pointsRef.current.map(p => ({
+                x: Math.round(p.x * 100) / 100,
+                y: Math.round(p.y * 100) / 100,
+                radius: Math.round((p.radius || 0) * 100) / 100
+            })),
+            holes: holesRef.current.map(h => ({
+                x: Math.round(h.x * 100) / 100,
+                y: Math.round(h.y * 100) / 100,
+                radius: Math.round(h.radius * 100) / 100
+            })),
+            svgPath: svgPathData,
+            color: activeColor
+        };
+        
+        return JSON.stringify(exportData, null, 2);
+    };
+
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Copied to clipboard!');
+        });
+    };
+
     return (
         <div ref={canvasWrapperRef} style={{ width: '100%', minHeight: 600, padding: 20, background: '#1a1a1a' }}>
             <div style={{ marginBottom: 16 }}>
@@ -626,6 +729,132 @@ export default function ElshapeEnhanced() {
                     <li>📐 Minimum size constraint: {MIN_WIDTH}x{MIN_HEIGHT}px</li>
                     <li>🎨 Corner radius support with smart overlap prevention</li>
                 </ul>
+            </div>
+
+            <div style={{
+                marginTop: 12,
+                padding: 16,
+                background: '#2a2a2a',
+                borderRadius: 6,
+                border: '1px solid #444'
+            }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+                    <h3 style={{ margin: 0, color: '#fff', fontSize: 18 }}>📤 Export Data</h3>
+                    <button
+                        onClick={() => setShowExport(!showExport)}
+                        style={{
+                            padding: '6px 12px',
+                            background: '#444',
+                            color: '#fff',
+                            border: 'none',
+                            borderRadius: 4,
+                            cursor: 'pointer',
+                            fontSize: 12
+                        }}
+                    >
+                        {showExport ? 'Hide' : 'Show'}
+                    </button>
+                </div>
+
+                {showExport && (
+                    <>
+                        <div style={{ marginBottom: 12 }}>
+                            <div style={{ color: '#aaa', fontSize: 12, marginBottom: 6 }}>SVG Path Data:</div>
+                            <div style={{
+                                background: '#1a1a1a',
+                                padding: 12,
+                                borderRadius: 4,
+                                fontFamily: 'monospace',
+                                fontSize: 11,
+                                color: '#0f0',
+                                overflowX: 'auto',
+                                whiteSpace: 'pre-wrap',
+                                wordBreak: 'break-all',
+                                maxHeight: 120,
+                                overflowY: 'auto',
+                                border: '1px solid #333'
+                            }}>
+                                {svgPathData}
+                            </div>
+                            <button
+                                onClick={() => copyToClipboard(svgPathData)}
+                                style={{
+                                    marginTop: 8,
+                                    padding: '6px 12px',
+                                    background: '#0066cc',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: 4,
+                                    cursor: 'pointer',
+                                    fontSize: 12
+                                }}
+                            >
+                                Copy SVG Path
+                            </button>
+                        </div>
+
+                        <div style={{ marginBottom: 12 }}>
+                            <div style={{ color: '#aaa', fontSize: 12, marginBottom: 6 }}>Complete JSON Export:</div>
+                            <div style={{
+                                background: '#1a1a1a',
+                                padding: 12,
+                                borderRadius: 4,
+                                fontFamily: 'monospace',
+                                fontSize: 11,
+                                color: '#ff0',
+                                overflowX: 'auto',
+                                whiteSpace: 'pre',
+                                maxHeight: 200,
+                                overflowY: 'auto',
+                                border: '1px solid #333'
+                            }}>
+                                {exportToJSON()}
+                            </div>
+                            <button
+                                onClick={() => copyToClipboard(exportToJSON())}
+                                style={{
+                                    marginTop: 8,
+                                    padding: '6px 12px',
+                                    background: '#0066cc',
+                                    color: '#fff',
+                                    border: 'none',
+                                    borderRadius: 4,
+                                    cursor: 'pointer',
+                                    fontSize: 12
+                                }}
+                            >
+                                Copy JSON Data
+                            </button>
+                        </div>
+
+                        <div style={{
+                            background: '#1a1a1a',
+                            padding: 12,
+                            borderRadius: 4,
+                            border: '1px solid #333'
+                        }}>
+                            <div style={{ color: '#fff', fontSize: 12, marginBottom: 8, fontWeight: 'bold' }}>
+                                SVG Preview:
+                            </div>
+                            <svg
+                                viewBox={`0 0 ${canvasRef.current?.width || 600} ${canvasRef.current?.height || 500}`}
+                                style={{
+                                    width: '100%',
+                                    maxHeight: 200,
+                                    background: '#000',
+                                    border: '1px solid #444',
+                                    borderRadius: 4
+                                }}
+                            >
+                                <path
+                                    d={svgPathData}
+                                    fill={activeColor}
+                                    fillRule="evenodd"
+                                />
+                            </svg>
+                        </div>
+                    </>
+                )}
             </div>
         </div>
     );
