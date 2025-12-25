@@ -126,12 +126,12 @@ export default function ClientComponent() {
                                     previewComponent ?
                                         <div className='w-full h-full'>
                                             {previewComponent === 1 && <ShapePreview6 />}
-                                            {previewComponent === 2 && <Ushape />}
+                                            {previewComponent === 2 && <Shape7 />}
                                             {previewComponent === 3 && <HorizontalRectangle />}
                                             {previewComponent === 4 && <ShapePreview5 />}
                                             {previewComponent === 5 && <ShapePreview3 />}
                                             {previewComponent === 6 && <Newshape1 />}
-                                            {previewComponent === 7 && <Shape7 />}
+                                            {previewComponent === 7 && < Ushape />}
                                             {previewComponent === 8 && <Elshape points={points} />}
                                             {/* {previewComponent === 6 && <ShapePreview2 />} */}
                                         </div>
